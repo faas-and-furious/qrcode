@@ -1,4 +1,4 @@
-FROM golang:1.9rc2-alpine as BUILDER
+FROM golang:1.10.4 as BUILDER
 MAINTAINER john@johnmccabe.net
 
 RUN apk --no-cache add make
@@ -7,10 +7,10 @@ COPY . /go/src/github.com/faas-and-furious/qrcode
 
 RUN make
 
-FROM alpine
+FROM alpine:3.9
 
 COPY --from=builder /go/bin/qrcode /usr/bin
-ADD https://github.com/alexellis/faas/releases/download/0.6.0/fwatchdog /usr/bin
+ADD https://github.com/alexellis/faas/releases/download/0.13.0/fwatchdog /usr/bin
 RUN chmod +x /usr/bin/fwatchdog
 COPY --from=builder /go/bin/qrcode /usr/bin
 RUN chmod +x /usr/bin/qrcode
